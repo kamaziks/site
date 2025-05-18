@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ukr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Weather App</title>
+    <style>
+        /* Вбудовані стилі для швидкого оновлення */
+        .container {
+            position: relative;
+            width: 400px;
+            height: 590px;
+            background: #fff;
+            padding: 28px 32px;
+            border-radius: 18px;
+            font-family: 'Roboto', sans-serif;
+            transition: 0.6s ease-out;
+            overflow-y: auto;
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dff6ff;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .weather-content {
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #0093E9;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #06283D;
+        }
+
+        .admin-content {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f1f1f1;
+            border-radius: 10px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Секція авторизації -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-box">
+            <h2>Погодний сервіс</h2>
+            <div class="auth-nav">
+                <button class="auth-tab active" data-tab="login">Вхід</button>
+                <button class="auth-tab" data-tab="register">Реєстрація</button>
+            </div>
+            
+            <!-- Форма входу -->
+            <div class="auth-form active" id="loginForm">
+                <div class="input-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••">
+                </div>
+                <button class="auth-button" id="loginButton">Увійти</button>
+                <p class="auth-message" id="loginMessage"></p>
+            </div>
+            
+            <!-- Форма реєстрації -->
+            <div class="auth-form" id="registerForm">
+                <div class="input-group">
+                    <label for="registerName">Ім'я</label>
+                    <input type="text" id="registerName" placeholder="Ваше ім'я">
+                </div>
+                <div class="input-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" placeholder="your@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="registerPassword">Пароль</label>
+                    <input type="password" id="registerPassword" placeholder="••••••••">
+                </div>
+                <div class="input-group">
+                    <label for="registerPasswordConfirm">Підтвердження паролю</label>
+                    <input type="password" id="registerPasswordConfirm" placeholder="••••••••">
+                </div>
+                <button class="auth-button" id="registerButton">Зареєструватись</button>
+                <p class="auth-message" id="registerMessage"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основний контейнер погоди -->
+    <div class="container" id="weatherContainer">
+        <!-- Хедер з інформацією про користувача -->
+        <div class="user-header">
+            <div class="user-info">
+                <span id="userName">Користувач</span>
+                <span class="user-level" id="userLevel">Стандарт</span>
+            </div>
+            <div class="user-actions">
+                <button id="upgradeBtn" class="upgrade-btn">Покращити</button>
+                <button id="logoutBtn" class="logout-btn">Вийти</button>
+            </div>
+        </div>
+
+        <!-- Обгортка для контенту з прокруткою -->
+        <div class="weather-content">
+            <div class="search-box">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" placeholder="введіть місто">
+                <button class="fa-solid fa-magnifying-glass"></button>
+            </div>
+
+            <div class="not-found">
+                <img src="images/404.png">
+                <p>Oops! Invalid location :/</p>
+            </div>
+
+            <div class="weather-box">
+                <img src="">
+                <p class="temperature"></p>
+                <p class="description"></p>
+            </div>
+
+            <div class="weather-details">
+                <div class="humidity">
+                    <i class="fa-solid fa-water"></i>
+                    <div class="text">
+                        <span></span>
+                        <p>Вологість</p>
+                    </div>
+                </div>
+                <div class="wind">
+                    <i class="fa-solid fa-wind"></i>
+                    <div class="text">
+                        <span></span>
+                        <p>Швидкість вітру</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Додаткові функції для преміум користувачів -->
+            <div class="premium-features" id="premiumFeatures">
+                <h3>Преміум функції</h3>
+                <div class="feature-options">
+                    <div class="feature">
+                        <button id="forecastBtn" class="feature-btn">5-денний прогноз</button>
+                    </div>
+                    <div class="feature">
+                        <button id="alertsBtn" class="feature-btn">Сповіщення погоди</button>
+                    </div>
+                </div>
+                <div id="forecastContainer" class="forecast-container"></div>
+            </div>
+
+            <!-- Адмін панель -->
+            <div class="admin-panel" id="adminPanel">
+                <h3>Адмін панель</h3>
+                <div class="admin-actions">
+                    <button id="usersBtn" class="admin-btn">Управління користувачами</button>
+                    <button id="statsBtn" class="admin-btn">Статистика</button>
+                </div>
+                <div id="adminContent" class="admin-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальне вікно для покращення акаунту -->
+    <div class="modal" id="upgradeModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Покращити свій акаунт</h2>
+            <div class="upgrade-options">
+                <div class="upgrade-option">
+                    <h3>Преміум</h3>
+                    <ul>
+                        <li>5-денний прогноз</li>
+                        <li>Сповіщення про погодні умови</li>
+                        <li>Деталізована інформація</li>
+                    </ul>
+                    <button class="upgrade-option-btn" data-level="premium">Вибрати</button>
+                </div>
+                <div class="upgrade-option">
+                    <h3>Адміністратор</h3>
+                    <p>Для отримання прав адміністратора зверніться до власника сайту</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/7c8801c017.js" crossorigin="anonymous"></script>
+    <script src="auth.js"></script>
+    <script src="script-patch.js"></script>
+    <script src="index.js"></script>
+    <script src="api.js"></script>
+</body>
+
+</html>
