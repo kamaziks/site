@@ -121,8 +121,9 @@ body{
 /* Main Weather Container Styles */
 .container {
     position: relative;
-    width: 400px;
-    height: 590px; /* Зменшена висота */
+    max-height: 100%;
+    width: 700px;
+    height: 500px; /* Зменшена висота */
     background: #fff;
     padding: 28px 32px;
     border-radius: 18px;
@@ -527,6 +528,7 @@ body{
 .search-history-table tr:nth-child(even) {
     background-color: #f2f2f2;
 }
+
 
 .change-level-btn {
     padding: 5px;

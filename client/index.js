@@ -115,12 +115,12 @@ async function fetchForecast(city) {
     return await res.json();
 }
 
-document.getElementById('forecastBtn').addEventListener('click', async () => {
-    const user = JSON.parse(localStorage.getItem('weatherAppCurrentUser'));
-        if (!user || (user.level !== 'premium' && user.level !== 'admin')) {
-    alert('Доступно лише для преміум користувачів!');
-    return;
-}
+    document.getElementById('forecastBtn').addEventListener('click', async () => {
+        const user = JSON.parse(localStorage.getItem('weatherAppCurrentUser'));
+            if (!user || (user.level !== 'premium' && user.level !== 'admin')) {
+        alert('Доступно лише для преміум користувачів!');
+        return;
+    }
     const city = document.querySelector('.search-box input').value.trim();
     if (!city) {
         alert('Введіть місто!');
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alertsBtn.addEventListener('click', () => {
             const user = JSON.parse(localStorage.getItem('weatherAppCurrentUser') || '{}');
             if (user.level === 'premium' || user.level === 'admin') {
-                alert('Update API for using this!');
+                alert('Update API for using!');
             } else {
                 alert('Сповіщення доступні лише для преміум користувачів!');
             }

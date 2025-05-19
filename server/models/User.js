@@ -28,7 +28,9 @@ const UserSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  failedLoginAttempts: { type: Number, default: 0 },
+    lockUntil: { type: Date }
 });
 
 // Хешування паролю перед збереженням
@@ -44,6 +46,11 @@ UserSchema.pre('save', async function(next) {
 // Метод для порівняння введеного паролю з хешованим
 UserSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+
+UserSchema.methods.isLocked = function() {
+    return this.lockUntil && this.lockUntil > Date.now();
 };
 
 module.exports = mongoose.model('User', UserSchema);

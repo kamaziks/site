@@ -81,14 +81,35 @@ router.post('/login', async (req, res) => {
       });
     }
 
+    // Перевірка блокування
+    if (user.isLocked()) {
+      const wait = Math.ceil((user.lockUntil - Date.now()) / 60000);
+      return res.status(403).json({
+        success: false,
+        message: `Акаунт заблоковано. Спробуйте через ${wait} хв.`
+      });
+    }
+
     // Перевірка пароля
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
+      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
+      // Якщо 3 і більше невдалих спроб — блокуємо на 5 хвилин
+      if (user.failedLoginAttempts >= 5) {
+        user.lockUntil = new Date(Date.now() + 5 * 60 * 1000);
+        user.failedLoginAttempts = 0; // обнуляємо лічильник після блокування
+      }
+      await user.save();
       return res.status(400).json({
         success: false,
         message: 'Невірні облікові дані'
       });
     }
+
+    // Успішний вхід — обнуляємо лічильник і блокування
+    user.failedLoginAttempts = 0;
+    user.lockUntil = undefined;
+    await user.save();
 
     // Генерація токена і відправлення відповіді
     const token = generateToken(user._id);
@@ -111,7 +132,6 @@ router.post('/login', async (req, res) => {
     });
   }
 });
-
 // @route   GET /api/auth/me
 // @desc    Отримання даних поточного користувача
 // @access  Private

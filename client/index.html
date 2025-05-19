@@ -14,8 +14,9 @@
         /* Вбудовані стилі для швидкого оновлення */
         .container {
             position: relative;
-            width: 400px;
-            height: 590px;
+            max-height: 100%;
+            width: 600px;
+            height: 500px;
             background: #fff;
             padding: 28px 32px;
             border-radius: 18px;
@@ -180,7 +181,9 @@
                         <button id="alertsBtn" class="feature-btn">Сповіщення погоди</button>
                     </div>
                 </div>
-                <div id="forecastContainer" class="forecast-container"></div>
+                <div class="forecast-block">
+                     <div id="forecastContainer" class="forecast-container"></div>
+            </div>
             </div>
 
             <!-- Адмін панель -->
