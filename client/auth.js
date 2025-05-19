@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('weatherAppCurrentUser') || 'null');
+    if (token && user) {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('weatherContainer').style.display = 'block';
+        document.getElementById('userName').textContent = user.name;
+        document.getElementById('userLevel').textContent = user.level.charAt(0).toUpperCase() + user.level.slice(1);
+
+        if (user.level === 'premium' || user.level === 'admin') {
+            document.getElementById('premiumFeatures').style.display = 'block';
+        } else {
+            document.getElementById('premiumFeatures').style.display = 'none';
+        }
+        if (user.level === 'admin') {
+            document.getElementById('adminPanel').style.display = 'block';
+        } else {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+    } else {
+        document.getElementById('authContainer').style.display = 'flex';
+        document.getElementById('weatherContainer').style.display = 'none';
+    }
+
     // Перемикання вкладок Вхід/Реєстрація
     document.querySelectorAll('.auth-tab').forEach(tab => {
         tab.addEventListener('click', function() {
@@ -76,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
                      document.getElementById('userName').textContent = res.user.name;
                      document.getElementById('userLevel').textContent = res.user.level.charAt(0).toUpperCase() + res.user.level.slice(1);
 
-    // ДОДАЙТЕ ЦЕ:
                      if (res.user.level === 'premium' || res.user.level === 'admin') {
                         document.getElementById('premiumFeatures').style.display = 'block';
                     } else {
@@ -97,8 +119,4 @@ document.addEventListener('DOMContentLoaded', () => {
             msg.textContent = 'Помилка сервера';
         }
     });
-
-    // При старті показати тільки authContainer
-    document.getElementById('authContainer').style.display = 'flex';
-    document.getElementById('weatherContainer').style.display = 'none';
 });

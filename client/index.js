@@ -84,27 +84,9 @@ function fetchWeather() {
 
 // Функція для логування пошуків (для адміністратора)
 function logSearch(city) {
-    // Перевіряємо, чи користувач адміністратор
-    const currentUser = JSON.parse(localStorage.getItem('weatherAppCurrentUser') || '{}');
-    if (currentUser.level !== 'admin') return;
-    
-    // Отримуємо історію пошуків
-    let searchHistory = JSON.parse(localStorage.getItem('weatherSearchHistory') || '[]');
-    
-    // Додаємо новий запис
-    searchHistory.push({
-        city,
-        user: currentUser.name,
-        time: new Date().toISOString()
-    });
-    
-    // Обмежуємо історію до 50 останніх пошуків
-    if (searchHistory.length > 50) {
-        searchHistory = searchHistory.slice(-50);
-    }
-    
-    // Зберігаємо оновлену історію
-    localStorage.setItem('weatherSearchHistory', JSON.stringify(searchHistory));
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    window.api.logWeatherSearch(city, token);
 }
 
 // Функція для динамічної зміни висоти контейнера залежно від рівня користувача
@@ -301,6 +283,19 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('weatherAppCurrentUser');
             document.getElementById('authContainer').style.display = 'flex';
             document.getElementById('weatherContainer').style.display = 'none';
+        });
+    }
+
+
+    const alertsBtn = document.getElementById('alertsBtn');
+    if (alertsBtn) {
+        alertsBtn.addEventListener('click', () => {
+            const user = JSON.parse(localStorage.getItem('weatherAppCurrentUser') || '{}');
+            if (user.level === 'premium' || user.level === 'admin') {
+                alert('Update API for using this!');
+            } else {
+                alert('Сповіщення доступні лише для преміум користувачів!');
+            }
         });
     }
 

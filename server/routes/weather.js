@@ -8,26 +8,17 @@ const router = express.Router();
 // @desc    Логування пошуку погоди
 // @access  Private
 router.post('/log-search', protect, async (req, res) => {
-  try {
-    const { city } = req.body;
-
-    // Створення нового запису пошуку
-    await WeatherSearch.create({
-      user: req.user.id,
-      city
-    });
-
-    res.status(201).json({
-      success: true,
-      message: 'Пошук успішно збережено'
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: 'Помилка сервера'
-    });
-  }
+    try {
+        const { city } = req.body;
+        await WeatherSearch.create({
+            city,
+            user: req.user._id,
+            timestamp: new Date()
+        });
+        res.json({ success: true });
+    } catch (e) {
+        res.json({ success: false, message: 'Помилка логування пошуку' });
+    }
 });
 
 // @route   GET /api/weather/searches
