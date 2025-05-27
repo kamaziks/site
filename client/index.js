@@ -106,7 +106,7 @@ function updateContainerHeight() {
     container.style.height = height;
 }
 
-// Оголосіть функцію fetchForecast ОКРЕМО, поза обробником!
+// Функція для отримання 5-денного прогнозу погоди
 async function fetchForecast(city) {
     const APIKey = '9303ca75581fd3f9d2558f1fb20e9f46';
     const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${APIKey}&units=metric&lang=ua`;
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alertsBtn.addEventListener('click', () => {
             const user = JSON.parse(localStorage.getItem('weatherAppCurrentUser') || '{}');
             if (user.level === 'premium' || user.level === 'admin') {
-                alert('Update API for using!');
+                alert('Немає сповіщень про погоду');
             } else {
                 alert('Сповіщення доступні лише для преміум користувачів!');
             }

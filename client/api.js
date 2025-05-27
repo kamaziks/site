@@ -49,7 +49,7 @@ async function getWeatherSearches(token) {
     return await res.json();
 }
 
-// Отримати статистику пошуків (тільки для адміна)
+// Отримати статистику пошуків погоди (тільки для адміна)
 async function getWeatherStats(token) {
     const res = await fetch(`${API_URL}/weather/stats`, {
         headers: { 'Authorization': `Bearer ${token}` }

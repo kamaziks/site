@@ -94,7 +94,7 @@ router.post('/login', async (req, res) => {
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
-      // Якщо 3 і більше невдалих спроб — блокуємо на 5 хвилин
+      // Якщо 5 і більше невдалих спроб — блокуємо на 5 хвилин
       if (user.failedLoginAttempts >= 5) {
         user.lockUntil = new Date(Date.now() + 5 * 60 * 1000);
         user.failedLoginAttempts = 0; // обнуляємо лічильник після блокування
